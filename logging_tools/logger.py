@@ -8,12 +8,12 @@ from logging_tools.singletone import Singleton
 
 class MyLogger(metaclass=Singleton):
     """
-    Класс для логирования сообщений с поддержкой уровней логирования, цветного вывода в консоль
-    и автоматической ротации лог-файлов с архивированием.
+    A class for logging messages with support for logging levels,
+    colored console output, and automatic log file rotation with archiving.
 
-    Атрибуты:
-        LEVELS (dict): Словарь соответствия уровней логирования числовым значениям.
-        COLORS (dict): Словарь ANSI-кодов для цветного оформления сообщений в консоли.
+    Attributes:
+        LEVELS (dict): A dictionary mapping logging levels to numeric values.
+        COLORS (dict): A dictionary of ANSI codes for colored console output.
     """
 
     LEVELS = {
@@ -25,19 +25,19 @@ class MyLogger(metaclass=Singleton):
     }
 
     COLORS = {
-        "DEBUG": "\033[94m",  # Синий
-        "INFO": "\033[92m",  # Зеленый
-        "WARNING": "\033[93m",  # Желтый
-        "ERROR": "\033[91m",  # Красный
-        "CRITICAL": "\033[41m",  # Белый текст на красном фоне
-        "RESET": "\033[0m"  # Сброс цвета
+        "DEBUG": "\033[94m",  # Blue
+        "INFO": "\033[92m",  # Green
+        "WARNING": "\033[93m",  # Yellow
+        "ERROR": "\033[91m",  # Red
+        "CRITICAL": "\033[41m",  # White text on red background
+        "RESET": "\033[0m"  # Reset color
     }
 
     def __init__(self, log_dir="logs", level="DEBUG"):
         """
-        Инициализирует экземпляр MyLogger.
-        Если экземпляр уже существует, __init__ может быть вызван повторно,
-        но в рамках Singleton это не приводит к созданию нового объекта.
+        Initializes an instance of MyLogger.
+        If an instance already exists, calling __init__ again does not create a new object
+        due to the Singleton pattern.
         """
 
         if hasattr(self, '_initialized') and self._initialized:
@@ -58,26 +58,26 @@ class MyLogger(metaclass=Singleton):
 
     def _get_log_filename(self):
         """
-        Генерирует имя лог-файла на основе текущей даты.
+        Generates the log file name based on the current date.
 
-        Возвращает:
-            str: Полный путь к лог-файлу в формате "{log_dir}/log_{current_date}.log".
+        Returns:
+            str: The full path to the log file in the format "{log_dir}/log_{current_date}.log".
         """
         return os.path.join(self.log_dir, f"log_{self.current_date}.log")
 
     def _compress_old_logs(self):
         """
-        Архивирует лог-файлы за предыдущие дни.
+        Archives log files from previous days.
 
-        Для каждого файла в директории log_dir:
-            - Если имя файла начинается с "log_" и заканчивается на ".log",
-              извлекается дата из имени файла.
-            - Если дата не совпадает с текущей, файл архивируется в формате gzip,
-              после чего исходный лог-файл удаляется.
+        For each file in the log_dir directory:
+            - If the file name starts with "log_" and ends with ".log",
+              the date is extracted from the file name.
+            - If the date does not match the current one, the file is compressed into a gzip archive,
+              and the original log file is deleted.
         """
         for file in os.listdir(self.log_dir):
             if file.startswith("log_") and file.endswith(".log"):
-                log_date = file[4:14]  # Извлечение даты из имени файла
+                log_date = file[4:14]  # Extracting date from the file name
                 if log_date != self.current_date:
                     log_path = os.path.join(self.log_dir, file)
                     gz_path = log_path + ".gz"
@@ -87,22 +87,22 @@ class MyLogger(metaclass=Singleton):
                             shutil.copyfileobj(f_in, cast(BinaryIO, f_out))
 
                     os.remove(log_path)
-                    print(f"Архивирован лог: {file} → {gz_path}")
+                    print(f"Archived log: {file} → {gz_path}")
 
     def _write_log(self, level, message):
         """
-        Формирует и записывает сообщение лога, если уровень сообщения соответствует установленному порогу.
+        Formats and writes a log message if the message level meets the set threshold.
 
-        Параметры:
-            level (str): Уровень логирования ("DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL").
-            message (str): Текст лог-сообщения.
+        Parameters:
+            level (str): Logging level ("DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL").
+            message (str): The log message text.
 
-        Действия:
-            - Проверяет, соответствует ли уровень сообщения минимальному порогу.
-            - Формирует строку сообщения с временной меткой.
-            - Выводит сообщение в консоль с соответствующим цветом.
-            - Проверяет, не изменилась ли дата, и при необходимости ротирует лог-файл.
-            - Записывает сообщение в лог-файл.
+        Actions:
+            - Checks if the message level meets the minimum threshold.
+            - Formats the log message with a timestamp.
+            - Displays the message in the console with the corresponding color.
+            - Checks if the date has changed and rotates the log file if needed.
+            - Writes the message to the log file.
         """
         if self.LEVELS[level] >= self.LEVELS[self.level]:
             timestamp = datetime.datetime.now().strftime("%m-%d-%Y %H:%M:%S")
@@ -118,12 +118,12 @@ class MyLogger(metaclass=Singleton):
 
     def _rotate_log_file(self):
         """
-        Ротирует лог-файл при смене дня.
+        Rotates the log file when the day changes.
 
-        Действия:
-            - Сравнивает текущую дату с сохраненной датой.
-            - Если дата изменилась, обновляет current_date, генерирует новый лог-файл
-              и архивирует лог-файлы предыдущих дней.
+        Actions:
+            - Compares the current date with the stored date.
+            - If the date has changed, updates current_date, generates a new log file,
+              and archives log files from previous days.
         """
         today = datetime.datetime.now().strftime("%m-%d-%Y")
         if today != self.current_date:
@@ -133,45 +133,45 @@ class MyLogger(metaclass=Singleton):
 
     def debug(self, message):
         """
-        Записывает сообщение уровня DEBUG.
+        Logs a message at the DEBUG level.
 
-        Параметры:
-            message (str): Текст сообщения.
+        Parameters:
+            message (str): The message text.
         """
         self._write_log("DEBUG", message)
 
     def info(self, message):
         """
-        Записывает сообщение уровня INFO.
+        Logs a message at the INFO level.
 
-        Параметры:
-            message (str): Текст сообщения.
+        Parameters:
+            message (str): The message text.
         """
         self._write_log("INFO", message)
 
     def warning(self, message):
         """
-        Записывает сообщение уровня WARNING.
+        Logs a message at the WARNING level.
 
-        Параметры:
-            message (str): Текст сообщения.
+        Parameters:
+            message (str): The message text.
         """
         self._write_log("WARNING", message)
 
     def error(self, message):
         """
-        Записывает сообщение уровня ERROR.
+        Logs a message at the ERROR level.
 
-        Параметры:
-            message (str): Текст сообщения.
+        Parameters:
+            message (str): The message text.
         """
         self._write_log("ERROR", message)
 
     def critical(self, message):
         """
-        Записывает сообщение уровня CRITICAL.
+        Logs a message at the CRITICAL level.
 
-        Параметры:
-            message (str): Текст сообщения.
+        Parameters:
+            message (str): The message text.
         """
         self._write_log("CRITICAL", message)
