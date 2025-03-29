@@ -1,10 +1,12 @@
-import os
-import gzip
 from datetime import datetime, timedelta
 import pytest
-
 from logging_tools.logger import MyLogger
 
+
+@pytest.fixture(autouse=True)
+def reset_singleton(monkeypatch):
+    from logging_tools.singletone import Singleton
+    monkeypatch.setattr(Singleton, '_instances', {})
 
 def test_logger_writes_message(tmp_path):
     """

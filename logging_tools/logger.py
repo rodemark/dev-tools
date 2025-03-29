@@ -117,11 +117,22 @@ class MyLogger(metaclass=Singleton):
                 f.write(log_message + "\n")
 
     def _rotate_log_file(self):
+        """
+        Checks if the current date has changed and, if necessary, rotates the log file.
+
+        Actions:
+            - Retrieves today's date in the format MM-DD-YYYY.
+            - Compares it with the stored date (self.current_date).
+            - If the date has changed:
+                - Checks whether the current log file exists.
+                - If the file exists, archives it in gzip format by copying the file's contents into an archive and then removing the original.
+                - Prints a message indicating that the log file has been archived.
+                - Updates self.current_date to today's date.
+                - Generates a new log file name for subsequent log entries.
+        """
         today = datetime.datetime.now().strftime("%m-%d-%Y")
         if today != self.current_date:
-            # Сохраняем старый лог для архивирования
             old_log_file = self.log_file
-            # Сначала архивируем старый лог-файл
             if os.path.exists(old_log_file):
                 gz_path = old_log_file + ".gz"
                 with open(old_log_file, "rb") as f_in:
@@ -130,7 +141,6 @@ class MyLogger(metaclass=Singleton):
                 os.remove(old_log_file)
                 print(f"Archived log: {old_log_file} → {gz_path}")
 
-            # Обновляем дату и лог-файл
             self.current_date = today
             self.log_file = self._get_log_filename()
 
