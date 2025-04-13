@@ -32,19 +32,19 @@ Git Tools is a module for analyzing your repository's commit history. It provide
 - **Commit Summary:**
 
   ```bash
-  python3 dev_tools/git_tools/git_tool.py --start-date 01-04-2025 --end-date 30-04-2025
+  python3 dev_tools.git_tools.git_tool.py --start-date 01-04-2025 --end-date 30-04-2025
   ```
 
 - **Filter by Author:**
 
   ```bash
-  python3 dev_tools/git_tools/git_tool.py -sd 01-04-2025 -ed 30-04-2025 -a "John Doe"
+  python3 dev_tools.git_tools.git_tool.py -sd 01-04-2025 -ed 30-04-2025 -a "John Doe"
   ```
 
 - **Filter by Branch:**
 
   ```bash
-  python3 dev_tools/git_tools/git_tool.py -sd 01-04-2025 -ed 30-04-2025 -b develop
+  python3 dev_tools.git_tools.git_tool.py -sd 01-04-2025 -ed 30-04-2025 -b develop
   ```
 
 ---
