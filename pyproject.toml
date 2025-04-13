@@ -1,0 +1,26 @@
+[project]
+name = "dev_tools"
+version = "0.0.1"
+description = "A collection of developer tools."
+authors = [
+    { name = "rodemark", email = "rode.mark01@gmail.com" }
+]
+license = { text = "MIT" }
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "colorama>=0.4.0"
+]
+
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent"
+]
+
+urls = { "Homepage" = "https://github.com/rodemark/dev_tools" }
+
+[tool.poetry.dev-dependencies]
+pytest = "^8.3.5"
+graphviz = "^0.20.3"

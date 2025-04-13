@@ -1,16 +1,15 @@
 from datetime import datetime, timedelta
+from dev_tools.logging_tools.logger import MyLogger
 import pytest
-from logging_tools.logger import MyLogger
-
 
 @pytest.fixture(autouse=True)
 def reset_singleton(monkeypatch):
-    from logging_tools.singletone import Singleton
+    from dev_tools.logging_tools.singletone import Singleton
     monkeypatch.setattr(Singleton, '_instances', {})
 
 def test_logger_writes_message(tmp_path):
     """
-    This test verifies that when a log message is written,
+    This tests verifies that when a log message is written,
     a file is created and contains the logged message.
     """
     log_dir = tmp_path / "logs"
@@ -30,8 +29,8 @@ def test_logger_writes_message(tmp_path):
 
 def test_compress_old_logs(tmp_path):
     """
-    This test verifies that the _compress_old_logs method archives an old log file.
-    To test this, we manually create a log file with a date different from the current one.
+    This tests verifies that the _compress_old_logs method archives an old log file.
+    To tests this, we manually create a log file with a date different from the current one.
     """
     log_dir = tmp_path / "logs"
     log_dir.mkdir()
@@ -50,7 +49,7 @@ def test_compress_old_logs(tmp_path):
 
 def test_logger_rotation_on_date_change(tmp_path):
     """
-    This test verifies that when the date changes (simulating log file rotation),
+    This tests verifies that when the date changes (simulating log file rotation),
     a new log file is created, and the old one is archived.
     """
     log_dir = tmp_path / "logs"
