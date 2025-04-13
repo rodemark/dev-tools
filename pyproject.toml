@@ -3,7 +3,7 @@ name = "dev_tools"
 version = "0.0.1"
 description = "A collection of developer tools."
 authors = [
-    { name = "rodemark", email = "rode.mark01@gmail.com" }
+    { name = "Mark Rode", email = "rode.mark01@gmail.com" }
 ]
 license = { text = "MIT" }
 readme = "README.md"
